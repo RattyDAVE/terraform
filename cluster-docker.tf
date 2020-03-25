@@ -11,25 +11,9 @@ variable "container_port" {
 
 variable "instance_count" {
   description = "Instance count for httptest"
-  default = "1"
+  default = "10"
 }
 
-
-# Start a container
-resource "docker_container" "httptest" {
- count = ${var.instance_count}
- name  = "httptest.${count.index}"
- image = "rattydave/httptest"
- ports {
-    protocol = "tcp"
-    internal = "8000"
-  }
- volumes {
-   host_path = "/root/dockertest"
-   container_path = "/root/test"
- }
- env = ["VIRTUAL_HOST=${var.hostname},httptest${count.index}.${var.hostname}", "VIRTUAL_PORT=${docker_container.httptest.ports.internal}", "LETSENCRYPT_HOST=${var.hostname}"]
-}
 
 resource "docker_container" "nginx-proxy" {
  name  = "nginx-proxy"
@@ -72,3 +56,16 @@ resource "docker_container" "nginx-proxy-letsencrypt" {
   from_container = "nginx-proxy"
  }
 }
+
+resource "docker_container" "httptest" {
+ count = var.instance_count
+ name  = "instance.${count.index}"
+ image = "rattydave/httptest"
+ #ports {
+ #   protocol = "tcp"
+ #   internal = "8000"
+ # }
+ env = ["VIRTUAL_HOST=${var.hostname},httptest${count.index}.${var.hostname}", "VIRTUAL_PORT=${var.container_port}", "LETSENCRYPT_HOST=${var.hostname}"]
+}
+
+
