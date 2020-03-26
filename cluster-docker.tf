@@ -14,6 +14,9 @@ variable "instance_count" {
   default = "10"
 }
 
+provider "docker" {
+  host = "tcp://127.0.0.1:2376/"
+}
 
 resource "docker_container" "nginx-proxy" {
  name  = "nginx-proxy"
