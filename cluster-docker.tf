@@ -47,6 +47,7 @@ resource "docker_container" "nginx-proxy" {
 resource "docker_container" "nginx-proxy-letsencrypt" {
  name  = "nginx-proxy-letsencrypt"
  image = "jrcs/letsencrypt-nginx-proxy-companion"
+ depends_on = [docker_container.nginx-proxy]
  volumes {
   host_path = "/var/run/docker.sock"
   container_path = "/var/run/docker.sock"
@@ -61,6 +62,7 @@ resource "docker_container" "httptest" {
  count = var.instance_count
  name  = "instance.${count.index}"
  image = "rattydave/httptest"
+ depends_on = [docker_container.nginx-proxy]
  #ports {
  #   protocol = "tcp"
  #   internal = "8000"
