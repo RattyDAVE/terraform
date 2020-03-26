@@ -15,6 +15,7 @@ variable "instance_count" {
 }
 
 provider "docker" {
+  #Local Instance
   host = "unix:///var/run/docker.sock"
 }
 
