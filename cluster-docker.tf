@@ -8,7 +8,6 @@ variable "container_port" {
   default = "8000"
 }
 
-
 variable "instance_count" {
   description = "Instance count for httptest"
   default = "10"
